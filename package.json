@@ -1,0 +1,25 @@
+{
+  "name": "chromacord",
+  "version": "1.0.0",
+  "description": "Colored text studio for Discord. Gradients, effects and templates for ANSI code blocks.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "ReimaginedPixel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReimaginedPixel/chromacord.git"
+  },
+  "homepage": "https://reimaginedpixel.github.io/chromacord/",
+  "scripts": {
+    "start": "npx --yes http-server -p 8080 -c-1 .",
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/build.mjs --check && node --test \"tests/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  }
+}

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chromacord: colored text for Discord</title>
+<meta name="description" content="Write colored Discord messages with gradients, effects and templates. Free, open source and it runs entirely in your browser.">
+<meta name="author" content="ReimaginedPixel">
+<meta name="theme-color" content="#1b1b1b">
+<link rel="canonical" href="https://reimaginedpixel.github.io/chromacord/">
+<link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chromacord">
+<meta property="og:title" content="Chromacord: colored text for Discord">
+<meta property="og:description" content="Gradients, effects, templates and a live preview for Discord's ANSI code blocks. Free and open source.">
+<meta property="og:url" content="https://reimaginedpixel.github.io/chromacord/">
+<meta property="og:image" content="https://reimaginedpixel.github.io/chromacord/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<!-- DISCORD-EMBED -->
+<script id="discord:component-embed" type="application/json">
+{
+  "component": {
+    "type": 17,
+    "accent_color": 4559340,
+    "components": [
+      {
+        "type": 10,
+        "content": "### [Chromacord](https://reimaginedpixel.github.io/chromacord/)\n```ansi\n\u001b[1;38;2;255;113;206mC\u001b[38;2;230;138;216mo\u001b[38;2;202;158;225ml\u001b[38;2;168;176;235mo\u001b[38;2;122;191;244mr\u001b[38;2;1;205;254me\u001b[38;2;96;187;255md \u001b[38;2;130;169;255mt\u001b[38;2;153;149;255me\u001b[38;2;171;128;255mx\u001b[38;2;185;103;255mt\u001b[0m for Discord, with \u001b[38;2;255;95;109mg\u001b[38;2;255;110;110mr\u001b[38;2;255;123;111ma\u001b[38;2;255;136;111md\u001b[38;2;255;149;112mi\u001b[38;2;255;161;112me\u001b[38;2;255;172;113mn\u001b[38;2;255;184;113mt\u001b[38;2;255;195;113ms\u001b[0m, \u001b[38;2;255;90;90me\u001b[38;2;255;159;67mf\u001b[38;2;255;228;94mf\u001b[38;2;76;217;123me\u001b[38;2;62;211;230mc\u001b[38;2;91;140;255mt\u001b[38;2;178;107;255ms\u001b[0m and \u001b[1;38;2;255;255;255;48;2;91;140;255m templates \n```"
+      }
+    ]
+  }
+}
+</script>
+<!-- /DISCORD-EMBED -->
+<link rel="preload" href="assets/fonts/recursive-latin-casl.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-nl-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/app.css">
+<script defer src="assets/js/chromacord.js"></script>
+</head>
+<body data-theme="ash">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></symbol>
+    <symbol id="i-clear" viewBox="0 0 24 24"><path d="M4 7V5h11v2"/><path d="M9.5 5 7 19"/><path d="m14 13 6 6"/><path d="m20 13-6 6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#editor">Skip to the editor</a>
+
+<div class="page">
+  <header class="top">
+    <h1 class="brand"><a href="./"><img src="assets/img/icon.svg" alt="" width="30" height="30"><span>Chromacord</span></a></h1>
+    <p class="tagline">Colored text for Discord</p>
+    <nav class="top-nav" aria-label="Page">
+      <a href="#guide">Guide</a>
+      <a href="#credits">Credits</a>
+      <a href="https://github.com/ReimaginedPixel/chromacord">Source on GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="studio" aria-label="Message editor">
+      <div class="work">
+        <div class="toolbar" role="toolbar" aria-label="Text style">
+          <div class="tool-group">
+            <button type="button" class="tool" data-cmd="b" aria-pressed="false" title="Bold (Ctrl+B)" aria-label="Bold"><span class="glyph g-b">B</span></button>
+            <button type="button" class="tool" data-cmd="i" aria-pressed="false" title="Italic (Ctrl+I)" aria-label="Italic"><span class="glyph g-i">I</span></button>
+            <button type="button" class="tool" data-cmd="u" aria-pressed="false" title="Underline (Ctrl+U)" aria-label="Underline"><span class="glyph g-u">U</span></button>
+            <button type="button" class="tool" data-cmd="s" aria-pressed="false" title="Strikethrough (Ctrl+Shift+X)" aria-label="Strikethrough"><span class="glyph g-s">S</span></button>
+            <button type="button" class="tool" data-cmd="clear" title="Clear formatting (Ctrl+\)" aria-label="Clear formatting"><svg class="icon"><use href="#i-clear"/></svg></button>
+          </div>
+          <div class="tool-group">
+            <button type="button" class="tool" data-cmd="undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled><svg class="icon"><use href="#i-undo"/></svg></button>
+            <button type="button" class="tool" data-cmd="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" disabled><svg class="icon"><use href="#i-redo"/></svg></button>
+          </div>
+          <div class="tool-group end">
+            <span class="tool-label" id="theme-label">Preview</span>
+            <div class="seg themes" role="radiogroup" aria-labelledby="theme-label" id="themes"></div>
+            <button type="button" class="tool" id="more" title="More" aria-label="More actions"><svg class="icon"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+
+        <div class="chat">
+          <div class="msg">
+            <div class="avatar" aria-hidden="true"><img src="assets/img/icon.svg" alt="" width="40" height="40"></div>
+            <div class="msg-main">
+              <div class="msg-head"><span class="msg-name">You</span><span class="msg-time" id="msg-time">Today</span></div>
+              <div class="code">
+                <div id="editor" class="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Message" aria-describedby="editor-help" spellcheck="false" autocorrect="off" data-placeholder="Type your message, then select text to color it" data-empty="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="visually-hidden" id="editor-help">Select text and use the color panel to style it. Ctrl+Enter copies the message for Discord.</p>
+      </div>
+
+      <div class="outbar">
+        <div class="meter" id="meter" data-state="ok">
+          <p class="meter-text"><span id="count">0</span> / <span id="limit">2,000 characters</span><span class="meter-note" id="meter-note"></span></p>
+          <div class="meter-track" aria-hidden="true"><div class="meter-fill" id="meter-fill"></div></div>
+        </div>
+        <div class="out-actions">
+          <button type="button" class="btn quiet" id="codes-toggle" aria-expanded="false" aria-controls="codes"><svg class="icon"><use href="#i-code"/></svg><span>Show codes</span></button>
+          <button type="button" class="btn quiet" id="share"><svg class="icon"><use href="#i-link"/></svg><span>Share link</span></button>
+          <div class="split">
+            <button type="button" class="btn primary" id="copy"><span class="copy-label">Copy for Discord</span></button>
+            <button type="button" class="btn primary split-more" id="copy-more" aria-label="Copy in another format"><svg class="icon"><use href="#i-down"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="codes" id="codes" hidden>
+        <p class="codes-summary" id="codes-summary"></p>
+        <pre class="codes-body" id="codes-body"></pre>
+      </div>
+
+      <aside class="panel" aria-label="Colors, effects and templates">
+        <div class="target" id="target-wrap">
+          <span class="target-label" id="target-label">Apply to</span>
+          <div class="seg" role="radiogroup" aria-labelledby="target-label" id="target">
+            <button type="button" role="radio" aria-checked="true" data-target="fg">Text</button>
+            <button type="button" role="radio" aria-checked="false" data-target="bg">Background</button>
+          </div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Tools">
+          <button type="button" role="tab" id="tab-colors" aria-controls="pane-colors" aria-selected="true">Colors</button>
+          <button type="button" role="tab" id="tab-effects" aria-controls="pane-effects" aria-selected="false" tabindex="-1">Effects</button>
+          <button type="button" role="tab" id="tab-templates" aria-controls="pane-templates" aria-selected="false" tabindex="-1">Templates</button>
+        </div>
+
+        <div class="pane" role="tabpanel" id="pane-colors" aria-labelledby="tab-colors">
+          <div class="group">
+            <div class="group-head"><h2>Classic</h2><p class="hint">Follow each reader's theme</p></div>
+            <div class="swatches" id="classic"></div>
+          </div>
+          <div class="group">
+            <div class="group-head"><h2>Custom</h2><p class="hint">Look the same for everyone</p></div>
+            <div class="picker">
+              <label class="well" id="well"><input type="color" id="pick" value="#ff8a3d"><span class="visually-hidden">Pick a custom color</span></label>
+              <input class="hex" id="hex" value="#ff8a3d" spellcheck="false" autocomplete="off" maxlength="7" aria-label="Hex color" aria-describedby="hex-error">
+              <button type="button" class="btn" id="apply-hex">Apply</button>
+            </div>
+            <p class="field-error" id="hex-error" hidden>Use a hex color like #ff8800.</p>
+            <div class="subhead"><h3>Recent</h3><button type="button" class="link" id="clear-recent" hidden>Clear</button></div>
+            <div class="swatches" id="recent"></div>
+            <p class="empty" id="recent-empty">Colors you apply from the picker show up here.</p>
+          </div>
+          <div class="group">
+            <div class="group-head"><h2>Palettes</h2>
+              <label class="select"><span class="visually-hidden">Palette</span><select id="palette-select"></select><svg class="icon"><use href="#i-down"/></svg></label>
+            </div>
+            <div class="swatches" id="palette"></div>
+          </div>
+          <button type="button" class="btn ghost full" id="remove-color">Remove text color</button>
+        </div>
+
+        <div class="pane" role="tabpanel" id="pane-effects" aria-labelledby="tab-effects" hidden>
+          <div class="group">
+            <h2 class="group-title">Effect</h2>
+            <div class="modes" role="radiogroup" aria-label="Effect" id="modes"></div>
+            <p class="hint mode-hint" id="mode-hint"></p>
+          </div>
+          <div class="group">
+            <div class="group-head"><h2>Colors</h2><button type="button" class="link" id="reverse"><svg class="icon"><use href="#i-swap"/></svg>Reverse</button></div>
+            <div class="stops" id="stops"></div>
+            <label class="check"><input type="checkbox" id="per-line"><span>Restart on every line</span></label>
+          </div>
+          <button type="button" class="btn primary full" id="apply-fx">Select text to apply</button>
+          <div class="group">
+            <div class="group-head"><h2>Presets</h2><button type="button" class="link" id="more-presets" aria-expanded="false" aria-controls="presets">Show all</button></div>
+            <div class="presets" id="presets"></div>
+          </div>
+        </div>
+
+        <div class="pane" role="tabpanel" id="pane-templates" aria-labelledby="tab-templates" hidden>
+          <p class="hint pane-intro">Pick one to add it at your cursor. Undo takes it back out.</p>
+          <div class="templates" id="templates"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="guide" id="guide" aria-labelledby="guide-title">
+      <div class="guide-main">
+        <h2 id="guide-title">Send colored text in Discord</h2>
+        <ol class="steps">
+          <li><strong>Write your message</strong> in the editor. It works like any other text box.</li>
+          <li><strong>Select some text</strong> and pick a color, a style or an effect from the panel.</li>
+          <li><strong>Press Copy for Discord</strong> and paste into any channel or DM. It arrives as a code block in your colors.</li>
+        </ol>
+
+        <h3 class="faq-title">Questions</h3>
+        <div class="faq">
+          <details>
+            <summary>Why do my friends see plain text?</summary>
+            <p>Colors only show inside code blocks on Discord's desktop app and in the browser. Mobile support has lagged behind for years, and custom RGB colors only rolled out in October 2026, so people on older app versions may see plain text or just the eight classic colors.</p>
+          </details>
+          <details>
+            <summary>Why do the classic colors look different for some people?</summary>
+            <p>The eight classic colors follow each reader's theme, so red on Light is a different red than on Onyx. Custom colors are fixed and look the same everywhere. Switch the preview between Light, Ash, Dark and Onyx to check your message.</p>
+          </details>
+          <details>
+            <summary>How long can a message be?</summary>
+            <p>2,000 characters, or 4,000 with Nitro. The color codes count too, so effects that color every letter fill a message quickly. The counter under the editor shows the total, and Show codes shows exactly where the characters go.</p>
+          </details>
+          <details>
+            <summary>Can I edit a message I already sent?</summary>
+            <p>Yes. Copy the message in Discord and paste it into the editor, the colors come back. Import, in the menu at the top right of the editor, also reads bot strings written with <code>\u001b</code> escapes and colored terminal output.</p>
+          </details>
+          <details>
+            <summary>Can I use this in a bot?</summary>
+            <p>Open the arrow next to Copy for Discord and choose discord.js, discord.py, JDA, a webhook body or a plain escaped string. Each one is ready to paste into your code.</p>
+          </details>
+          <details>
+            <summary>Is my text sent anywhere?</summary>
+            <p>No. Everything runs in your browser and your draft is saved on this device only. A share link carries the message inside the link itself, so nothing gets uploaded.</p>
+          </details>
+          <details>
+            <summary>Is this made by Discord?</summary>
+            <p>No. Chromacord is an unofficial, open source tool. It is not affiliated with or endorsed by Discord.</p>
+          </details>
+        </div>
+      </div>
+
+      <div class="guide-side">
+        <h3>How the codes work</h3>
+        <p class="lede">Discord colors text inside a code block marked <code>ansi</code>. Every style change is the escape character (ESC, U+001B) followed by a code. Chromacord writes them for you, this is what they mean.</p>
+        <table class="cheat">
+          <thead><tr><th scope="col">Code</th><th scope="col">Does</th><th scope="col"><span class="visually-hidden">Example</span></th></tr></thead>
+          <tbody>
+            <tr><td><code>ESC[0m</code></td><td>Reset everything</td><td class="sample"><span>Plain</span></td></tr>
+            <tr><td><code>ESC[1m</code></td><td>Bold</td><td class="sample"><span class="a-b">Bold</span></td></tr>
+            <tr><td><code>ESC[3m</code></td><td>Italic</td><td class="sample"><span class="a-i">Italic</span></td></tr>
+            <tr><td><code>ESC[4m</code></td><td>Underline</td><td class="sample"><span class="a-u">Under</span></td></tr>
+            <tr><td><code>ESC[9m</code></td><td>Strikethrough</td><td class="sample"><span class="a-s">Struck</span></td></tr>
+            <tr><td><code>ESC[30m</code> to <code>ESC[37m</code></td><td>Classic text colors</td><td class="sample"><span class="a-f31">C</span><span class="a-f32">o</span><span class="a-f33">l</span><span class="a-f34">o</span><span class="a-f35">r</span><span class="a-f36">s</span></td></tr>
+            <tr><td><code>ESC[40m</code> to <code>ESC[47m</code></td><td>Classic backgrounds</td><td class="sample"><span class="a-g41"> </span><span class="a-g42"> </span><span class="a-g43"> </span><span class="a-g44"> </span><span class="a-g45"> </span><span class="a-g46"> </span></td></tr>
+            <tr><td><code>ESC[38;2;R;G;Bm</code></td><td>Any text color</td><td class="sample"><span style="color:#ff8a3d">Custom</span></td></tr>
+            <tr><td><code>ESC[48;2;R;G;Bm</code></td><td>Any background</td><td class="sample"><span style="background:#7c4dff;color:#fff">Custom</span></td></tr>
+          </tbody>
+        </table>
+        <p class="note">Codes combine with semicolons. <code>ESC[1;4;38;2;124;134;255m</code> is bold, underlined indigo. A message starts with <code>```ansi</code> on its own line and ends with <code>```</code>.</p>
+      </div>
+    </section>
+
+    <section class="credits" id="credits" aria-labelledby="credits-title">
+      <h2 id="credits-title">Credits</h2>
+      <p class="lede">Chromacord builds on the work of the people who figured this out first.</p>
+      <div class="credit-list">
+        <article class="credit">
+          <h3>Rebane</h3>
+          <p>Made the original Discord Colored Text Generator in 2022 and put it in the public domain. Chromacord started as a rebuild of that tool, and its theme preview uses the palette Rebane collected from Discord's client.</p>
+          <p class="credit-links"><a href="https://rebane2001.com/discord-colored-text-generator/">Original generator</a><a href="https://gist.github.com/rebane2001/07f2d8e80df053c70a1576d27eabe97c">Source</a></p>
+        </article>
+        <article class="credit">
+          <h3>kkrypt0nn</h3>
+          <p>Wrote the guide to ANSI on Discord that most tools and bots learned from: which codes exist, how they combine and how they render.</p>
+          <p class="credit-links"><a href="https://gist.github.com/kkrypt0nn/a02506f3712ff2d1c8ca7c9e0aed7c06">Read the guide</a></p>
+        </article>
+        <article class="credit">
+          <h3>TinyVirtual</h3>
+          <p>Noticed Discord's custom RGB colors while they were still an experiment and shared the first working example with everyone.</p>
+          <p class="credit-links"><a href="https://gist.github.com/kkrypt0nn/a02506f3712ff2d1c8ca7c9e0aed7c06?permalink_comment_id=6224323#gistcomment-6224323">The discovery</a></p>
+        </article>
+      </div>
+      <p class="fonts-note">Set in <a href="https://www.recursive.design/">Recursive</a> by Arrow Type and <a href="https://www.jetbrains.com/lp/mono/">JetBrains Mono</a> by JetBrains, both under the SIL Open Font License.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Chromacord is open source under the MIT license and is not affiliated with Discord.</p>
+    <p class="foot-links"><a href="https://github.com/ReimaginedPixel/chromacord">Source code</a><a href="https://github.com/ReimaginedPixel/chromacord/issues">Report a problem</a><a href="https://github.com/ReimaginedPixel">Made by ReimaginedPixel</a></p>
+  </footer>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<div class="visually-hidden" aria-live="polite" id="announcer"></div>
+
+<dialog id="import-dialog" aria-labelledby="import-title">
+  <form method="dialog" class="dialog-body" id="import-form">
+    <h2 id="import-title">Import a message</h2>
+    <p>Paste a colored Discord message, terminal output or a bot string with <code>\u001b</code> escapes. It replaces what is in the editor.</p>
+    <label class="visually-hidden" for="import-text">Message to import</label>
+    <textarea id="import-text" rows="8" spellcheck="false" placeholder="```ansi&#10;\u001b[1;31mHello&#10;```"></textarea>
+    <p class="field-error" id="import-error" hidden></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn quiet" value="cancel" id="import-cancel">Cancel</button>
+      <button type="submit" class="btn primary" value="import" id="import-go">Import</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="keys-dialog" aria-labelledby="keys-title">
+  <div class="dialog-body">
+    <h2 id="keys-title">Keyboard shortcuts</h2>
+    <table class="keys">
+      <tbody>
+        <tr><td>Bold, italic, underline</td><td><kbd>Ctrl</kbd> <kbd>B</kbd>, <kbd>I</kbd>, <kbd>U</kbd></td></tr>
+        <tr><td>Strikethrough</td><td><kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>X</kbd></td></tr>
+        <tr><td>Clear formatting</td><td><kbd>Ctrl</kbd> <kbd>\</kbd></td></tr>
+        <tr><td>Undo</td><td><kbd>Ctrl</kbd> <kbd>Z</kbd></td></tr>
+        <tr><td>Redo</td><td><kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Z</kbd></td></tr>
+        <tr><td>Copy for Discord</td><td><kbd>Ctrl</kbd> <kbd>Enter</kbd></td></tr>
+        <tr><td>Show this list</td><td><kbd>?</kbd></td></tr>
+      </tbody>
+    </table>
+    <p class="hint">On a Mac, use Cmd instead of Ctrl.</p>
+    <div class="dialog-actions"><button type="button" class="btn primary" id="keys-close">Done</button></div>
+  </div>
+</dialog>
+
+<dialog id="manual-dialog" aria-labelledby="manual-title">
+  <div class="dialog-body">
+    <h2 id="manual-title">Copy it yourself</h2>
+    <p>Your browser blocked the clipboard. The text below is selected, press <kbd>Ctrl</kbd> <kbd>C</kbd> to copy it.</p>
+    <textarea id="manual-text" rows="8" readonly spellcheck="false"></textarea>
+    <div class="dialog-actions"><button type="button" class="btn primary" id="manual-close">Done</button></div>
+  </div>
+</dialog>
+</body>
+</html>

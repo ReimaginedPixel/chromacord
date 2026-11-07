@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chromacord themes</title>
+<link rel="stylesheet" href="../assets/css/app.css">
+<style>
+  html, body { margin: 0; background: #1b1b1b; }
+  .grid { display: grid; grid-template-columns: repeat(2, 560px); gap: 20px; padding: 28px; width: max-content; }
+  .label { font: 600 15px/1 var(--ui); color: #b8b8b8; margin: 0 0 10px 4px; }
+  .chat { padding: 14px 16px 18px 12px; }
+  .shot { font: 400 14px/18px var(--mono); color: var(--chat-text); white-space: pre; padding: 8px; }
+</style>
+</head>
+<body>
+  <div class="grid" id="grid"></div>
+  <script type="module">
+    import { TEMPLATES } from '../assets/js/data/templates.js';
+    import { renderRuns } from '../assets/js/ui/editor.js';
+    const pick = new URLSearchParams(location.search).get('t') || 'console';
+    const runs = TEMPLATES.find((t) => t.id === pick).build();
+    const grid = document.getElementById('grid');
+    for (const [id, name] of [['light', 'Light'], ['ash', 'Ash'], ['dark', 'Dark'], ['onyx', 'Onyx']]) {
+      const cell = document.createElement('div');
+      cell.dataset.theme = id;
+      cell.innerHTML = `<p class="label">${name}</p><div class="chat"><div class="code"><div class="shot"></div></div></div>`;
+      renderRuns(cell.querySelector('.shot'), runs);
+      grid.append(cell);
+    }
+    document.fonts.ready.then(() => document.body.setAttribute('data-ready', '1'));
+  </script>
+</body>
+</html>
