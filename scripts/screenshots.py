@@ -130,6 +130,9 @@ async def static_images(browser, url):
     await page.goto(url + 'scripts/themes.html?t=console', wait_until='networkidle')
     await page.wait_for_selector('body[data-ready]')
     await page.locator('#grid').screenshot(path=str(SHOTS / 'themes.png'))
+    await page.goto(url + 'scripts/vencord.html', wait_until='networkidle')
+    await page.wait_for_selector('body[data-ready]')
+    await page.locator('#grid').screenshot(path=str(SHOTS / 'vencord.png'))
     await ctx.close()
 
 

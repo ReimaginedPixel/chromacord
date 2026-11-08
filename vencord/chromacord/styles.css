@@ -1,0 +1,150 @@
+/* ansi blocks shown as text */
+
+.vc-chromacord-text {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.vc-chromacord-mono {
+    font-family: var(--font-code);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+}
+
+/* the color text modal */
+
+.vc-chromacord-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 8px;
+}
+
+.vc-chromacord-modal section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vc-chromacord-swatches,
+.vc-chromacord-presets,
+.vc-chromacord-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.vc-chromacord-row {
+    gap: 12px;
+}
+
+.vc-chromacord-swatch,
+.vc-chromacord-preset {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+}
+
+.vc-chromacord-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+.vc-chromacord-preset {
+    width: 44px;
+    height: 24px;
+    border-radius: 6px;
+}
+
+.vc-chromacord-on {
+    outline: 2px solid var(--text-default);
+    outline-offset: 2px;
+}
+
+.vc-chromacord-swatch:focus-visible,
+.vc-chromacord-preset:focus-visible,
+.vc-chromacord-toggle:focus-visible,
+.vc-chromacord-custom:focus-within {
+    outline: 2px solid var(--text-brand);
+    outline-offset: 2px;
+}
+
+.vc-chromacord-none {
+    background: linear-gradient(135deg, transparent 45%, var(--text-feedback-critical) 45% 55%, transparent 55%);
+}
+
+.vc-chromacord-custom input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.vc-chromacord-custom::after {
+    content: "+";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 0 2px #000;
+    pointer-events: none;
+}
+
+.vc-chromacord-hex {
+    width: 96px;
+}
+
+.vc-chromacord-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.vc-chromacord-toggle {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background: var(--background-mod-subtle);
+    color: var(--text-default);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.vc-chromacord-toggle:hover {
+    background: var(--background-mod-normal);
+}
+
+.vc-chromacord-toggle.vc-chromacord-on {
+    outline: none;
+    border-color: var(--text-default);
+    background: var(--background-mod-strong);
+}
+
+.vc-chromacord-preview {
+    min-height: 22px;
+    padding: 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-default);
+    font-size: 1rem;
+    line-height: 1.375rem;
+}
+
+.vc-chromacord-placeholder,
+.vc-chromacord-count {
+    color: var(--text-muted);
+}
+
+.vc-chromacord-count.vc-chromacord-over {
+    color: var(--text-feedback-critical);
+}
