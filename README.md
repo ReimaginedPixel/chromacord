@@ -6,7 +6,7 @@
 
 **Colored text for Discord.** Gradients, effects, templates and a live preview for Discord's ANSI code blocks.
 
-[**Open Chromacord**](https://reimaginedpixel.github.io/chromacord/) &nbsp;|&nbsp; [How it works](#how-discord-colors-text) &nbsp;|&nbsp; [Credits](#credits) &nbsp;|&nbsp; [Report a problem](https://github.com/ReimaginedPixel/chromacord/issues)
+[**Open Chromacord**](https://reimaginedpixel.github.io/chromacord/) &nbsp;|&nbsp; [Vencord plugin](#vencord-plugin) &nbsp;|&nbsp; [How it works](#how-discord-colors-text) &nbsp;|&nbsp; [Credits](#credits) &nbsp;|&nbsp; [Report a problem](https://github.com/ReimaginedPixel/chromacord/issues)
 
 [![Test and deploy](https://github.com/ReimaginedPixel/chromacord/actions/workflows/pages.yml/badge.svg)](https://github.com/ReimaginedPixel/chromacord/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-ededed)](LICENSE)
@@ -35,6 +35,7 @@ It grew out of [Rebane's Discord Colored Text Generator](https://rebane2001.com/
 - **Copy for bots.** Get the message as a discord.js, discord.py or JDA line, a webhook body, or an escaped string for any language.
 - **Paste or import colored text.** Discord messages, bot strings with `\u001b` escapes and terminal output (bright and 256 colors are mapped to what Discord can show).
 - **Share links.** The whole message lives in the link, nothing gets uploaded.
+- **Vencord plugin.** Shows colored code blocks as plain colored text right in Discord, and adds a chat bar button to color your own messages.
 - **No tracking, no external requests, no build step, no dependencies.** Fonts are self-hosted.
 
 ## Screenshots
@@ -55,6 +56,23 @@ It grew out of [Rebane's Discord Colored Text Generator](https://rebane2001.com/
 <td width="45%" valign="top"><b>On your phone</b><br><br><img src="docs/screenshots/mobile.png" alt="Chromacord on a phone screen"></td>
 </tr>
 </table>
+
+## Vencord plugin
+
+If you use [Vencord](https://vencord.dev), the plugin in [`vencord/`](vencord) brings Chromacord into Discord itself.
+
+- Messages with an `ansi` code block show as normal chat text in their colors, without the code block box. People without the plugin still see the regular colored code block.
+- A chat bar button colors the selected text, or the whole draft: classic colors, any custom color, gradient presets, bold, italic, underline and strikethrough. The result is a normal `ansi` block, so everyone sees the colors.
+
+<img src="docs/screenshots/vencord.png" alt="The same announcement as a colored code block, and as plain colored text with the plugin">
+
+To install it:
+
+1. Build Vencord from source: clone [Vencord](https://github.com/Vendicated/Vencord) and run `pnpm install --frozen-lockfile` in it.
+2. Copy the `vencord/chromacord` folder of this repository to `Vencord/src/userplugins/chromacord`.
+3. Run `pnpm build` and `pnpm inject` in the Vencord folder, restart Discord and turn on **Chromacord** in **Settings > Vencord > Plugins**.
+
+Client mods are against Discord's Terms of Service, so install it only if you accept that risk. The [plugin README](vencord/README.md) has the details, the settings and the browser and Vesktop steps.
 
 ## How Discord colors text
 
@@ -130,8 +148,8 @@ Opened from disk, some browsers block the web fonts and use system fonts instead
 | Command | What it does |
 | --- | --- |
 | `npm install` | Installs esbuild, the only dev dependency |
-| `npm run build` | Bundles `assets/js/` into `assets/js/chromacord.js`, the script the page loads. Run it after editing any module |
-| `npm test` | Checks the bundle is up to date, then runs the unit tests for the encoder, parser, colors and effects |
+| `npm run build` | Bundles `assets/js/` into `assets/js/chromacord.js`, the script the page loads, and copies the shared modules into the Vencord plugin. Run it after editing any module |
+| `npm test` | Checks the bundle and the plugin copies are up to date, then runs the unit tests for the encoder, parser, colors, effects and the Vencord plugin |
 | `python3 tests/e2e.py` | Browser tests for the editor. Needs Playwright and Chrome, and a server on port 8765 |
 | `python3 scripts/screenshots.py` | Regenerates the screenshots, the demo GIF, the social card and the favicons |
 | `node scripts/embed.mjs` | Rewrites the Discord link preview in `index.html` |
@@ -144,6 +162,7 @@ assets/js/data/          classic colors, palettes, effect presets, templates
 assets/js/ui/            the editor (contenteditable driven by a document model) and small UI helpers
 assets/js/main.js        wires the editor, the panel and the output together
 assets/js/chromacord.js  the bundle the page loads, built from the modules above (don't edit by hand)
+vencord/chromacord/      the Vencord plugin, with its own copy of the shared modules in lib/
 tests/                   node:test unit tests and the Playwright browser tests
 scripts/                 the bundler, image generators and the embed writer
 ```

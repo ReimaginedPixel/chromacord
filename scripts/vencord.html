@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chromacord for Vencord</title>
+<link rel="stylesheet" href="../assets/css/app.css">
+<link rel="stylesheet" href="../vencord/chromacord/styles.css">
+<style>
+  html, body { margin: 0; background: #1b1b1b; }
+  /* Discord's own names for the classic colors, which the plugin uses */
+  [data-theme] {
+    --ansi-black: var(--ansi-30); --ansi-red: var(--ansi-31); --ansi-green: var(--ansi-32); --ansi-yellow: var(--ansi-33);
+    --ansi-blue: var(--ansi-34); --ansi-magenta: var(--ansi-35); --ansi-cyan: var(--ansi-36); --ansi-white: var(--ansi-37);
+  }
+  .grid { display: grid; grid-template-columns: repeat(2, 520px); gap: 20px; padding: 28px; width: max-content; }
+  .label { font: 600 15px/1 var(--ui); color: #b8b8b8; margin: 0 0 10px 4px; }
+  .chat { padding: 16px 18px 20px 14px; height: calc(100% - 25px); box-sizing: border-box; }
+  .msg-head { font-family: var(--ui); }
+  .shot { font: 400 14px/18px var(--mono); color: var(--chat-text); white-space: pre; padding: 8px; }
+  .plain { font: 400 16px/22px var(--ui); color: var(--chat-text); margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="grid" id="grid" data-theme="ash">
+    <div>
+      <p class="label">Without the plugin</p>
+      <div class="chat"><div class="msg">
+        <div class="avatar"><img src="../assets/img/icon.svg" alt="" width="40" height="40"></div>
+        <div><div class="msg-head"><span class="msg-name">You</span><span class="msg-time">Today at 18:00</span></div>
+        <div class="code"><div class="shot" id="block"></div></div></div>
+      </div></div>
+    </div>
+    <div>
+      <p class="label">With the Chromacord plugin</p>
+      <div class="chat"><div class="msg">
+        <div class="avatar"><img src="../assets/img/icon.svg" alt="" width="40" height="40"></div>
+        <div><div class="msg-head"><span class="msg-name">You</span><span class="msg-time">Today at 18:00</span></div>
+        <div class="plain vc-chromacord-text" id="text"></div></div>
+      </div></div>
+    </div>
+  </div>
+  <script type="module">
+    // The left side is Chromacord's code block preview. The right side goes
+    // through the plugin's own tokenizer and styles, like it does in Discord.
+    import { TEMPLATES } from '../assets/js/data/templates.js';
+    import { encodeRuns } from '../assets/js/core/ansi.js';
+    import { renderRuns } from '../assets/js/ui/editor.js';
+    import { tokenize, cssOf } from '../vencord/chromacord/tokenize.js';
+
+    const pick = new URLSearchParams(location.search).get('t') || 'announcement';
+    const runs = TEMPLATES.find((t) => t.id === pick).build();
+    renderRuns(document.getElementById('block'), runs);
+
+    const text = document.getElementById('text');
+    for (const token of tokenize(encodeRuns(runs))) {
+      const span = document.createElement('span');
+      Object.assign(span.style, cssOf(token.style));
+      span.textContent = token.text;
+      text.append(span);
+    }
+    document.fonts.ready.then(() => document.body.setAttribute('data-ready', '1'));
+  </script>
+</body>
+</html>
