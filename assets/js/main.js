@@ -1,12 +1,12 @@
 // Chromacord: wiring the editor, the side panel and the output together.
 
-import { PLAIN_KEY, patchStyle, makeStyle } from './core/style.js';
+import { PLAIN_KEY, patchStyle, makeStyle, textCode } from './core/style.js';
 import * as D from './core/doc.js';
 import { encodeRuns, toMessage, measure, decodeAnsi, importText, tokenize, describeParams, MESSAGE_LIMIT, NITRO_LIMIT, COPY_FORMATS } from './core/ansi.js';
 import { effectColors, EFFECTS, graphemes } from './core/effects.js';
 import { normalizeHex, readableOn } from './core/color.js';
 import { encodeShare, decodeShare } from './core/share.js';
-import { CLASSIC, PALETTES, PRESETS, THEMES, THEME_HEX } from './data/palettes.js';
+import { BRIGHT, CLASSIC, PALETTES, PRESETS, THEMES, THEME_HEX } from './data/palettes.js';
 import { TEMPLATES, templateById } from './data/templates.js';
 import { Editor, renderRuns, decorate } from './ui/editor.js';
 import { $, $$, h, store, debounce, toast, menu, copyText, formatNumber } from './ui/helpers.js';
@@ -197,9 +197,10 @@ function swatch(color, label) {
   });
 }
 
+// Classic colors on the first row, bright ones on the second.
 function renderClassic() {
   $('#classic').replaceChildren(
-    ...CLASSIC.map(({ code, name }) => {
+    ...[...CLASSIC, ...BRIGHT].map(({ code, name }) => {
       const c = state.target === 'fg' ? code : code + 10;
       return h('button', {
         type: 'button',
@@ -602,7 +603,7 @@ function sweepGradient() {
   for (const run of D.toRuns(editor.doc)) {
     const c = run.style.fg ?? run.style.bg;
     if (c == null || !run.text.trim()) continue;
-    const hex = typeof c === 'number' ? THEME_HEX[state.theme][c >= 40 ? c - 10 : c] : c;
+    const hex = typeof c === 'number' ? THEME_HEX[state.theme][textCode(c)] : c;
     if (!seen.includes(hex)) seen.push(hex);
     if (seen.length >= 6) break;
   }

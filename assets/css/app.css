@@ -49,7 +49,9 @@
 }
 
 /* Discord themes. Classic colors and code block surfaces as Discord draws
-   them (values collected by Rebane, see Credits). */
+   them (values collected by Rebane, see Credits). Bright colors (90-97) are
+   Discord's --ansi-bright-* variables from .theme-dark (Ash), .theme-light,
+   .theme-darker (Dark) and .theme-midnight (Onyx). */
 [data-theme='ash'] {
   --ansi-30: hsl(0 0% 0%);
   --ansi-31: hsl(0.863 78.531% 65.294%);
@@ -59,6 +61,14 @@
   --ansi-35: hsl(315.349 89.583% 62.353%);
   --ansi-36: hsl(183.976 95.402% 34.118%);
   --ansi-37: hsl(230 4.286% 72.549%);
+  --ansi-90: #70717a;
+  --ansi-91: #ff938e;
+  --ansi-92: #21bb63;
+  --ansi-93: #e79418;
+  --ansi-94: #a0a9fa;
+  --ansi-95: #fd99e9;
+  --ansi-96: #5fbfc8;
+  --ansi-97: #ffffff;
   --chat-base: hsl(231.429 6.542% 20.98%);
   --chat-code: hsl(234.935 85.556% 64.706% / 0.0784);
   --chat-border: hsl(240 4% 60.784% / 0.2);
@@ -78,6 +88,14 @@
   --ansi-35: hsl(315.375 74.766% 58.039%);
   --ansi-36: hsl(184.049 100% 31.961%);
   --ansi-37: hsl(230 4.286% 72.549%);
+  --ansi-90: #70717a;
+  --ansi-91: #ca2b37;
+  --ansi-92: #108e4d;
+  --ansi-93: #db6e00;
+  --ansi-94: #5865f2;
+  --ansi-95: #b3269c;
+  --ansi-96: #007782;
+  --ansi-97: #ffffff;
   --chat-base: hsl(0 0% 98.431%);
   --chat-code: hsl(234.935 85.556% 64.706% / 0.0392);
   --chat-border: hsl(240 4% 60.784% / 0.4);
@@ -97,6 +115,14 @@
   --ansi-35: hsl(315.6 64.103% 54.118%);
   --ansi-36: hsl(184.832 100% 29.216%);
   --ansi-37: hsl(230 4.286% 72.549%);
+  --ansi-90: #70717a;
+  --ansi-91: #f47470;
+  --ansi-92: #21bb63;
+  --ansi-93: #e79418;
+  --ansi-94: #5865f2;
+  --ansi-95: #ff4cd2;
+  --ansi-96: #2fa9b3;
+  --ansi-97: #ffffff;
   --chat-base: hsl(240 7.143% 10.98%);
   --chat-code: hsl(234.935 85.556% 64.706% / 0.0784);
   --chat-border: hsl(240 4% 60.784% / 0.2);
@@ -116,6 +142,14 @@
   --ansi-35: hsl(315.672 55.372% 47.451%);
   --ansi-36: hsl(184.889 100% 26.471%);
   --ansi-37: hsl(230 4.286% 72.549%);
+  --ansi-90: #70717a;
+  --ansi-91: #e55455;
+  --ansi-92: #108e4d;
+  --ansi-93: #db6e00;
+  --ansi-94: #5865f2;
+  --ansi-95: #ff4cd2;
+  --ansi-96: #0096a1;
+  --ansi-97: #ffffff;
   --chat-base: hsl(240 12.5% 3.137%);
   --chat-code: hsl(234.935 85.556% 64.706% / 0.0784);
   --chat-border: hsl(240 4% 60.784% / 0.239);
@@ -141,6 +175,14 @@
 .a-f35 { color: var(--ansi-35); } .a-g45 { background-color: var(--ansi-35); }
 .a-f36 { color: var(--ansi-36); } .a-g46 { background-color: var(--ansi-36); }
 .a-f37 { color: var(--ansi-37); } .a-g47 { background-color: var(--ansi-37); }
+.a-f90 { color: var(--ansi-90); } .a-g100 { background-color: var(--ansi-90); }
+.a-f91 { color: var(--ansi-91); } .a-g101 { background-color: var(--ansi-91); }
+.a-f92 { color: var(--ansi-92); } .a-g102 { background-color: var(--ansi-92); }
+.a-f93 { color: var(--ansi-93); } .a-g103 { background-color: var(--ansi-93); }
+.a-f94 { color: var(--ansi-94); } .a-g104 { background-color: var(--ansi-94); }
+.a-f95 { color: var(--ansi-95); } .a-g105 { background-color: var(--ansi-95); }
+.a-f96 { color: var(--ansi-96); } .a-g106 { background-color: var(--ansi-96); }
+.a-f97 { color: var(--ansi-97); } .a-g107 { background-color: var(--ansi-97); }
 
 /* ------------------------------------------------------------------ base */
 

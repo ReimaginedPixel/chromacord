@@ -14,7 +14,7 @@ import { looksLikeAnsi, importText } from '../core/ansi.js';
 const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent);
 const GHOST = 'chromacord-selection';
 
-/** Apply a style to an element as classes (classic colors) and inline colors (custom). */
+/** Apply a style to an element as classes (theme colors) and inline colors (custom). */
 export function decorate(el, st) {
   const cls = [];
   if (st.b) cls.push('a-b');
@@ -102,7 +102,7 @@ export class Editor extends EventTarget {
   /**
    * @param {HTMLElement} el contenteditable element
    * @param {object} opts
-   * @param {(code:number) => string} opts.classicHex hex for a classic code in the current theme (for HTML copies)
+   * @param {(code:number) => string} opts.classicHex hex for a theme text code (30-37, 90-97) in the current theme (for HTML copies)
    */
   constructor(el, { classicHex } = {}) {
     super();

@@ -2,8 +2,11 @@
 //
 // A style is a frozen object: { b, i, u, s, fg, bg }
 //   b, i, u, s  bold, italic, underline, strikethrough (booleans)
-//   fg          null, a classic ANSI text color (30-37) or a "#rrggbb" string
-//   bg          null, a classic ANSI background color (40-47) or a "#rrggbb" string
+//   fg          null, a theme text color (30-37 classic, 90-97 bright) or a "#rrggbb" string
+//   bg          null, a theme background color (40-47 classic, 100-107 bright) or a "#rrggbb" string
+//
+// Theme colors are drawn by each reader's Discord theme, hex colors look the
+// same for everyone.
 //
 // Every character in the editor stores the key of its style, for example
 // "1000|31|" (bold red) or "0000|#ff8800|44". Keys are cheap to compare and
@@ -14,13 +17,19 @@ export const PLAIN = Object.freeze({ b: false, i: false, u: false, s: false, fg:
 
 const cache = new Map([[PLAIN_KEY, PLAIN]]);
 
-function parseColor(value, min, max) {
+// Theme color codes, classic then bright.
+const FG_CODES = [30, 90];
+const BG_CODES = [40, 100];
+
+const inRange = (n, starts) => Number.isInteger(n) && starts.some((start) => n >= start && n <= start + 7);
+
+function parseColor(value, starts) {
   if (value == null || value === '') return null;
-  if (typeof value === 'number') return Number.isInteger(value) && value >= min && value <= max ? value : null;
+  if (typeof value === 'number') return inRange(value, starts) ? value : null;
   const v = String(value).trim().toLowerCase();
   if (v[0] === '#') return /^#[0-9a-f]{6}$/.test(v) ? v : null;
   const n = Number(v);
-  return Number.isInteger(n) && n >= min && n <= max ? n : null;
+  return inRange(n, starts) ? n : null;
 }
 
 /** Build a clean, frozen style from any partial or untrusted object. */
@@ -30,8 +39,8 @@ export function makeStyle(partial = {}) {
     i: !!partial.i,
     u: !!partial.u,
     s: !!partial.s,
-    fg: parseColor(partial.fg, 30, 37),
-    bg: parseColor(partial.bg, 40, 47),
+    fg: parseColor(partial.fg, FG_CODES),
+    bg: parseColor(partial.bg, BG_CODES),
   });
 }
 
@@ -53,6 +62,11 @@ export function styleOf(key) {
 /** Re-serialize a key from an untrusted source (clipboard, share link). */
 export function normalizeKey(key) {
   return keyOf(styleOf(key));
+}
+
+/** The text code for a theme color: 31 stays 31, background 41 becomes 31, 101 becomes 91. */
+export function textCode(code) {
+  return inRange(code, BG_CODES) ? code - 10 : code;
 }
 
 export function patchStyle(st, patch) {

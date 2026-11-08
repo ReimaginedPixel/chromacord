@@ -6,6 +6,7 @@
 //   ESC [ <params> m      with ESC = U+001B
 //   0 reset, 1 bold, 3 italic, 4 underline, 9 strikethrough
 //   30-37 classic text color, 40-47 classic background color
+//   90-97 bright text color, 100-107 bright background color
 //   38;2;R;G;B custom text color, 48;2;R;G;B custom background color
 //
 // The encoder writes the shortest sequence it safely can, because every code
@@ -125,8 +126,10 @@ export function measure(body) {
 
 // ---------------------------------------------------------------------------
 // Decoding: ANSI text back into runs. Used for pasting and importing, so it is
-// generous: it understands terminal output too (bright colors, 256 colors,
-// colon separated params) and maps anything Discord can't show to what it can.
+// generous: it understands terminal output too (256 colors, colon separated
+// params) and maps anything Discord can't show to what it can. Bright colors
+// (90-97, 100-107 and 256 color entries 8-15) stay bright, because Discord
+// draws them in their own theme colors, apart from the classic ones.
 
 function applyParams(st, raw) {
   const groups = raw === '' ? ['0'] : raw.split(';');
@@ -178,10 +181,11 @@ function setRgb(st, p, nums) {
   st[p === 38 ? 'fg' : 'bg'] = hex;
 }
 
+// Entries 0-7 of the 256 color table are the classic colors, 8-15 the bright ones.
 function set256(st, p, n) {
   if (!Number.isInteger(n) || n < 0 || n > 255) return;
   const fg = p === 38;
-  if (n < 16) st[fg ? 'fg' : 'bg'] = (fg ? 30 : 40) + (n % 8);
+  if (n < 16) st[fg ? 'fg' : 'bg'] = (fg ? 30 : 40) + (n < 8 ? 0 : 60) + (n % 8);
   else st[fg ? 'fg' : 'bg'] = xterm256(n);
 }
 
@@ -200,8 +204,8 @@ function applySimple(st, p) {
   else if (p === 39) st.fg = null;
   else if (p >= 40 && p <= 47) st.bg = p;
   else if (p === 49) st.bg = null;
-  else if (p >= 90 && p <= 97) st.fg = p - 60;
-  else if (p >= 100 && p <= 107) st.bg = p - 60;
+  else if (p >= 90 && p <= 97) st.fg = p;
+  else if (p >= 100 && p <= 107) st.bg = p;
   // 2 (faint), 5 (blink), 7 (reverse) and friends do nothing in Discord
 }
 
@@ -346,6 +350,8 @@ export function describeParams(raw) {
     if (names[p]) words.push(names[p]);
     else if (p >= 30 && p <= 37) words.push(`text color ${p}`);
     else if (p >= 40 && p <= 47) words.push(`background ${p}`);
+    else if (p >= 90 && p <= 97) words.push(`bright text color ${p}`);
+    else if (p >= 100 && p <= 107) words.push(`bright background ${p}`);
     else if (!Number.isNaN(p)) words.push(`code ${p}`);
   }
   const text = words.join(', ');
