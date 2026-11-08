@@ -98,7 +98,7 @@ export function tokenize(input) {
 export function cssColor(color) {
   if (typeof color === 'string') return color;
   const name = `${color >= 8 ? 'bright-' : ''}${NAMES[color % 8]}`;
-  return `var(--ansi-${name}, ${THEME_HEX.dark[30 + (color % 8)]})`;
+  return `var(--ansi-${name}, ${THEME_HEX.dark[(color >= 8 ? 90 : 30) + (color % 8)]})`;
 }
 
 /** Inline style for a token, matching the properties Discord sets. */

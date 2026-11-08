@@ -110,7 +110,7 @@ export function readableOn(bg) {
   return contrast(bg, '#ffffff') >= contrast(bg, '#000000') ? '#ffffff' : '#000000';
 }
 
-/** xterm 256-color palette entry 16-255 as hex (0-15 are mapped to classic codes elsewhere). */
+/** xterm 256-color palette entry 16-255 as hex (0-15 are mapped to classic and bright codes elsewhere). */
 export function xterm256(n) {
   if (n >= 232) {
     const v = 8 + (n - 232) * 10;

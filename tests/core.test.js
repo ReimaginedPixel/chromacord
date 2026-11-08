@@ -1,11 +1,38 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import { normalizeHex, hexToRgb, rgbToHex, mixHex, sampleStops, rgbToOklab, oklabToRgb, contrast, readableOn, oklchToHex, xterm256 } from '../assets/js/core/color.js';
 import { effectColors, graphemes } from '../assets/js/core/effects.js';
 import { fromRuns, toRuns, replaceRange, mapStyles, summarize, wordAt, cleanText, serialize, deserialize } from '../assets/js/core/doc.js';
-import { makeStyle, keyOf, patchStyle } from '../assets/js/core/style.js';
+import { makeStyle, keyOf, patchStyle, textCode } from '../assets/js/core/style.js';
+import { BRIGHT, CLASSIC, THEMES, THEME_HEX } from '../assets/js/data/palettes.js';
 import { encodeShare, decodeShare } from '../assets/js/core/share.js';
+
+test('styles take classic and bright theme colors in the right slot', () => {
+  assert.deepEqual([makeStyle({ fg: 91 }).fg, makeStyle({ fg: '97' }).fg, makeStyle({ bg: 100 }).bg, makeStyle({ bg: 47 }).bg], [91, 97, 100, 47]);
+  assert.deepEqual([makeStyle({ fg: 89 }).fg, makeStyle({ fg: 98 }).fg, makeStyle({ fg: 101 }).fg, makeStyle({ bg: 97 }).bg, makeStyle({ bg: 108 }).bg], [null, null, null, null, null]);
+  assert.equal(makeStyle({ fg: 91.5 }).fg, null);
+});
+
+test('textCode maps backgrounds to their text code', () => {
+  assert.deepEqual([31, 41, 91, 101, 37, 47, 97, 107].map(textCode), [31, 31, 91, 91, 37, 37, 97, 97]);
+});
+
+test('every theme has a hex for each classic and bright slot, matching the CSS', () => {
+  const css = readFileSync(new URL('../assets/css/app.css', import.meta.url), 'utf8');
+  for (const { id } of THEMES) {
+    const block = css.slice(css.indexOf(`[data-theme='${id}'] {`)).split('}')[0];
+    for (const { code } of [...CLASSIC, ...BRIGHT]) {
+      assert.match(THEME_HEX[id][code], /^#[0-9a-f]{6}$/, `${id} ${code}`);
+      assert.ok(block.includes(`--ansi-${code}:`), `app.css has no --ansi-${code} for ${id}`);
+    }
+    for (const { code } of BRIGHT) assert.ok(block.includes(`--ansi-${code}: ${THEME_HEX[id][code]};`), `${id} ${code}`);
+  }
+  // Ash, from .theme-dark in Discord's CSS
+  assert.equal(THEME_HEX.ash[31], '#ec6361');
+  assert.equal(THEME_HEX.ash[91], '#ff938e');
+});
 
 test('normalizeHex', () => {
   assert.equal(normalizeHex('#ABC'), '#aabbcc');

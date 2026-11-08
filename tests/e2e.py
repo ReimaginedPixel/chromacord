@@ -92,6 +92,18 @@ async def main():
         check('classic red', (await body(page)).startswith(f'{ESC}[0;31mHello'), repr((await body(page))[:30]))
         check('selection kept after coloring', await page.evaluate('JSON.stringify(chromacord.editor.sel)') == '{"start":0,"end":5}')
 
+        # Bright swatches sit on a second row and keep their own code
+        check('classic and bright swatches', await page.locator('#classic .sw').count() == 16)
+        await page.click('#classic .sw[data-color="91"]')
+        check('bright red', (await body(page)).startswith(f'{ESC}[0;91mHello'), repr((await body(page))[:30]))
+        check('bright swatch shows pressed', await page.get_attribute('#classic .sw[data-color="91"]', 'aria-pressed') == 'true')
+        bright = await page.evaluate('''() => {
+            const span = document.querySelector('#editor .a-f91');
+            return span && getComputedStyle(span).color;
+        }''')
+        check('bright red uses the theme color', bright == 'rgb(255, 147, 142)', repr(bright))
+        await page.click('#classic .sw[data-color="31"]')
+
         # Bold via shortcut and toolbar state
         await page.keyboard.press('Control+b')
         check('ctrl+b bolds', (await body(page)).startswith(f'{ESC}[1;31mHello'), repr((await body(page))[:30]))
@@ -140,6 +152,9 @@ async def main():
         await select(page, 0, 6)
         await page.click('#classic .sw[data-color="44"]')
         check('classic background', '44m' in (await body(page)), repr((await body(page))[:40]))
+        await page.click('#classic .sw[data-color="104"]')
+        check('bright background', '104m' in (await body(page)) and '44m' not in (await body(page)), repr((await body(page))[:40]))
+        await page.click('#classic .sw[data-color="44"]')
         await page.click('#target [data-target="fg"]')
 
         # Word mode on backgrounds leaves the gaps clear
@@ -226,6 +241,11 @@ async def main():
         await page.fill('#import-text', '"\\u001b[0;31mImported\\u001b[0m"')
         await page.click('#import-go')
         check('import a bot string', await doc(page) == 'Imported' and (await body(page)).startswith(f'{ESC}[0;31m'), repr(await body(page)))
+        await page.click('#more')
+        await page.click('.menu-item:has-text("Import a message")')
+        await page.fill('#import-text', '"\\u001b[1;91;100mImported\\u001b[0m"')
+        await page.click('#import-go')
+        check('import keeps bright colors', await doc(page) == 'Imported' and (await body(page)).startswith(f'{ESC}[1;91;100m'), repr(await body(page)))
 
         # Templates
         await page.click('#tab-templates')

@@ -140,10 +140,40 @@ test('decodes terminal output: bright, 256 color, colon form, other escapes', ()
   const runs = decodeAnsi(`${ESC}[91mA${ESC}[38;5;196mB${ESC}[38;5;4mC${ESC}[38:2::255:128:0mD${ESC}[2K${ESC}]0;title\u0007E\r\n`);
   assert.equal(runs.map((x) => x.text).join(''), 'ABCDE\n');
   const fg = (ch) => runs.find((x) => x.text.includes(ch)).style.fg;
-  assert.equal(fg('A'), 31);
+  assert.equal(fg('A'), 91);
   assert.equal(fg('B'), '#ff0000');
   assert.equal(fg('C'), 34);
   assert.equal(fg('D'), '#ff8000');
+});
+
+// Discord draws 90-97 and 100-107 in their own theme colors, so they must not
+// turn into the classic ones on the way in.
+test('bright colors stay bright when decoding', () => {
+  const style = (src) => ({ ...decodeAnsi(`${src}x`)[0].style });
+  assert.deepEqual(style(`${ESC}[90;107m`), { ...style(''), fg: 90, bg: 107 });
+  assert.deepEqual(style(`${ESC}[1;97;100m`), { ...style(''), b: true, fg: 97, bg: 100 });
+  assert.equal(style(`${ESC}[91m${ESC}[39m`).fg, null);
+});
+
+test('256 color entries 0-7 are classic and 8-15 are bright', () => {
+  const style = (src) => decodeAnsi(`${src}x`)[0].style;
+  assert.equal(style(`${ESC}[38;5;1m`).fg, 31);
+  assert.equal(style(`${ESC}[38;5;8m`).fg, 90);
+  assert.equal(style(`${ESC}[38;5;9m`).fg, 91);
+  assert.equal(style(`${ESC}[38;5;15m`).fg, 97);
+  assert.equal(style(`${ESC}[48;5;4m`).bg, 44);
+  assert.equal(style(`${ESC}[48;5;12m`).bg, 104);
+  assert.equal(style(`${ESC}[38:5:11m`).fg, 93);
+});
+
+test('bright colors survive an encode and decode round trip', () => {
+  const runs = [r('a', { fg: 91 }), r('b', { fg: 97, bg: 104 }), r('c', { b: true, fg: 31, bg: 100 }), r('d')];
+  const body = encodeRuns(runs);
+  assert.equal(show(body), '\\e[0;91ma\\e[97;104mb\\e[1;31;100mc\\e[0md');
+  assert.deepEqual(
+    decodeAnsi(body).map((x) => [x.text, keyOf(x.style)]),
+    runs.map((x) => [x.text, keyOf(x.style)]),
+  );
 });
 
 test('import understands literals, code lines, caret notation and fences', () => {
@@ -179,12 +209,17 @@ test('style keys survive untrusted input', () => {
   assert.equal(normalizeKey('1111|#FFAA00|47'), '1111|#ffaa00|47');
   assert.equal(normalizeKey('garbage'), PLAIN_KEY);
   assert.equal(normalizeKey('0000|41|31'), PLAIN_KEY); // codes in the wrong slot are dropped
+  assert.equal(normalizeKey('0000|91|104'), '0000|91|104');
+  assert.equal(normalizeKey('0000|101|91'), PLAIN_KEY);
+  assert.equal(normalizeKey('0000|38|'), PLAIN_KEY);
+  assert.equal(normalizeKey('0000|98|108'), PLAIN_KEY);
   assert.equal(normalizeKey('0000|<script>|'), PLAIN_KEY);
 });
 
 test('describeParams reads codes in plain words', () => {
   assert.equal(describeParams('0;1;31'), 'Reset, bold, text color 31');
   assert.equal(describeParams('38;2;255;0;0'), 'Text rgb(255, 0, 0)');
+  assert.equal(describeParams('0;91;104'), 'Reset, bright text color 91, bright background 104');
 });
 
 test('templates stay well under the message limit', () => {

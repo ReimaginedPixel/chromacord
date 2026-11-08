@@ -144,7 +144,7 @@
 
         <div class="pane" role="tabpanel" id="pane-colors" aria-labelledby="tab-colors">
           <div class="group">
-            <div class="group-head"><h2>Classic</h2><p class="hint">Follow each reader's theme</p></div>
+            <div class="group-head"><h2>Classic and bright</h2><p class="hint">Follow each reader's theme</p></div>
             <div class="swatches" id="classic"></div>
           </div>
           <div class="group">
@@ -206,11 +206,11 @@
         <div class="faq">
           <details>
             <summary>Why do my friends see plain text?</summary>
-            <p>Colors only show inside code blocks on Discord's desktop app and in the browser. Mobile support has lagged behind for years, and custom RGB colors only rolled out in October 2026, so people on older app versions may see plain text or just the eight classic colors.</p>
+            <p>Colors only show inside code blocks on Discord's desktop app and in the browser. Mobile support has lagged behind for years, and custom RGB and bright colors come from the renderer that only rolled out in October 2026, so people on older app versions may see plain text or just the eight classic colors.</p>
           </details>
           <details>
             <summary>Why do the classic colors look different for some people?</summary>
-            <p>The eight classic colors follow each reader's theme, so red on Light is a different red than on Onyx. Custom colors are fixed and look the same everywhere. Switch the preview between Light, Ash, Dark and Onyx to check your message.</p>
+            <p>The eight classic and eight bright colors follow each reader's theme, so red on Light is a different red than on Onyx. Custom colors are fixed and look the same everywhere. Switch the preview between Light, Ash, Dark and Onyx to check your message.</p>
           </details>
           <details>
             <summary>How long can a message be?</summary>
@@ -248,6 +248,8 @@
             <tr><td><code>ESC[9m</code></td><td>Strikethrough</td><td class="sample"><span class="a-s">Struck</span></td></tr>
             <tr><td><code>ESC[30m</code> to <code>ESC[37m</code></td><td>Classic text colors</td><td class="sample"><span class="a-f31">C</span><span class="a-f32">o</span><span class="a-f33">l</span><span class="a-f34">o</span><span class="a-f35">r</span><span class="a-f36">s</span></td></tr>
             <tr><td><code>ESC[40m</code> to <code>ESC[47m</code></td><td>Classic backgrounds</td><td class="sample"><span class="a-g41"> </span><span class="a-g42"> </span><span class="a-g43"> </span><span class="a-g44"> </span><span class="a-g45"> </span><span class="a-g46"> </span></td></tr>
+            <tr><td><code>ESC[90m</code> to <code>ESC[97m</code></td><td>Bright text colors</td><td class="sample"><span class="a-f91">B</span><span class="a-f92">r</span><span class="a-f93">i</span><span class="a-f94">g</span><span class="a-f95">h</span><span class="a-f96">t</span></td></tr>
+            <tr><td><code>ESC[100m</code> to <code>ESC[107m</code></td><td>Bright backgrounds</td><td class="sample"><span class="a-g101"> </span><span class="a-g102"> </span><span class="a-g103"> </span><span class="a-g104"> </span><span class="a-g105"> </span><span class="a-g106"> </span></td></tr>
             <tr><td><code>ESC[38;2;R;G;Bm</code></td><td>Any text color</td><td class="sample"><span style="color:#ff8a3d">Custom</span></td></tr>
             <tr><td><code>ESC[48;2;R;G;Bm</code></td><td>Any background</td><td class="sample"><span style="background:#7c4dff;color:#fff">Custom</span></td></tr>
           </tbody>

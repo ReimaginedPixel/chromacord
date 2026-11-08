@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import { tokenize, cssOf, cssColor, PLAIN } from '../vencord/chromacord/tokenize.js';
 import { colorBody, colorMessage, colorRuns, plainText, PLUGIN_EFFECTS } from '../vencord/chromacord/colorize.js';
-import { encodeRuns, toMessage } from '../assets/js/core/ansi.js';
+import { decodeAnsi, encodeRuns, toMessage } from '../assets/js/core/ansi.js';
 import { makeStyle } from '../assets/js/core/style.js';
 import { TEMPLATES } from '../assets/js/data/templates.js';
 import { PRESETS } from '../assets/js/data/palettes.js';
@@ -15,6 +15,8 @@ const one = (input) => {
   return tokens[0];
 };
 const styled = (patch) => ({ ...PLAIN, ...patch });
+// Chromacord's theme codes as the plugin's slots: 31 and 41 are slot 1, 91 and 101 slot 9.
+const slotOf = (c, base) => (typeof c === 'number' ? c - base - (c >= base + 60 ? 52 : 0) : c);
 
 // --- tokenize: what Discord shows ----------------------------------------
 
@@ -87,7 +89,8 @@ test('neighbours with the same style merge', () => {
 
 test('theme colors use Discord variables with a fallback', () => {
   assert.equal(cssColor(1), 'var(--ansi-red, #de464a)');
-  assert.equal(cssColor(9), 'var(--ansi-bright-red, #de464a)');
+  assert.equal(cssColor(9), 'var(--ansi-bright-red, #f47470)');
+  assert.equal(cssColor(15), 'var(--ansi-bright-white, #ffffff)');
   assert.equal(cssColor(0), 'var(--ansi-black, #000000)');
   assert.equal(cssColor('#123456'), '#123456');
 });
@@ -115,13 +118,27 @@ test('every template reads back with its own text and styles', () => {
     got.forEach(([ch, st], k) => {
       if (/\s/.test(ch)) return; // the encoder may skip codes on spaces
       const w = want[k][1];
-      const theme = (c, base) => (typeof c === 'number' ? c - base : c);
       assert.deepEqual(
         [st.fg, st.bg, st.bold, st.italic, st.underline, st.strike],
-        [theme(w.fg, 30), theme(w.bg, 40), w.b, w.i, w.u, w.s],
+        [slotOf(w.fg, 30), slotOf(w.bg, 40), w.b, w.i, w.u, w.s],
         `${tpl.id} at ${k} (${ch})`,
       );
     });
+  }
+});
+
+// Chromacord's own decoder (import and paste) has to keep the colors Discord
+// shows apart, so a message read in and copied back out looks the same.
+test('the import decoder and Discord agree on all 16 theme colors', () => {
+  const sources = [];
+  for (let n = 0; n < 8; n += 1) sources.push(`${E}[${30 + n}m`, `${E}[${90 + n}m`, `${E}[${40 + n}m`, `${E}[${100 + n}m`);
+  for (let n = 0; n < 16; n += 1) sources.push(`${E}[38;5;${n}m`, `${E}[48;5;${n}m`);
+  for (const src of sources) {
+    const ours = decodeAnsi(`${src}x`)[0].style;
+    const discord = one(`${src}x`).style;
+    assert.deepEqual([slotOf(ours.fg, 30), slotOf(ours.bg, 40)], [discord.fg, discord.bg], JSON.stringify(src));
+    // and what Chromacord writes back reads the same in Discord
+    assert.deepEqual(one(encodeRuns([{ text: 'x', style: ours }])).style, discord, JSON.stringify(src));
   }
 });
 
@@ -133,6 +150,11 @@ test('one classic color', () => {
 
 test('classic colors move to 40-47 for backgrounds', () => {
   assert.equal(colorBody('Hi', { color: 34, target: 'bg' }), `${E}[0;44mHi`);
+});
+
+test('bright colors work too, and move to 100-107 for backgrounds', () => {
+  assert.equal(colorBody('Hi', { color: 91 }), `${E}[0;91mHi`);
+  assert.equal(colorBody('Hi', { color: 94, target: 'bg' }), `${E}[0;104mHi`);
 });
 
 test('a custom color with formatting', () => {

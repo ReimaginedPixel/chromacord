@@ -26,14 +26,14 @@ It grew out of [Rebane's Discord Colored Text Generator](https://rebane2001.com/
 ## Features
 
 - **Edit like a normal text editor.** Select text and press <kbd>Ctrl</kbd>+<kbd>B</kbd>, <kbd>I</kbd>, <kbd>U</kbd>, or pick a color. Full undo and redo, and your draft survives a reload.
-- **Every color Discord supports.** The 8 classic ANSI colors plus any 24-bit color, for text and for backgrounds. Bold, italic, underline and strikethrough.
+- **Every color Discord supports.** The 8 classic and 8 bright ANSI colors plus any 24-bit color, for text and for backgrounds. Bold, italic, underline and strikethrough.
 - **Effects.** Gradient, mirror, bands, alternate, per word and random, with 22 presets including pride flags. Gradients blend in OKLab, so the middle stays bright instead of turning muddy.
 - **Templates.** Announcement, server status, changelog, console log, progress bars, leaderboard and rules, ready to edit.
-- **Preview in every theme.** Light, Ash, Dark and Onyx use the palettes Discord draws, because the classic colors change with the reader's theme.
+- **Preview in every theme.** Light, Ash, Dark and Onyx use the palettes Discord draws, because the classic and bright colors change with the reader's theme.
 - **Codes view.** Shows every escape code in your message, how many characters it costs and what it does.
 - **Short output.** Only the styles that change get written, spaces skip codes they can't show, and a counter tracks the 2,000 and 4,000 (Nitro) character limits.
 - **Copy for bots.** Get the message as a discord.js, discord.py or JDA line, a webhook body, or an escaped string for any language.
-- **Paste or import colored text.** Discord messages, bot strings with `\u001b` escapes and terminal output (bright and 256 colors are mapped to what Discord can show).
+- **Paste or import colored text.** Discord messages, bot strings with `\u001b` escapes and terminal output. Bright colors stay bright, like Discord shows them, and 256 colors become the matching classic, bright or custom color.
 - **Share links.** The whole message lives in the link, nothing gets uploaded.
 - **Vencord plugin.** Shows colored code blocks as plain colored text right in Discord, and adds a chat bar button to color your own messages.
 - **No tracking, no external requests, no build step, no dependencies.** Fonts are self-hosted.
@@ -42,7 +42,7 @@ It grew out of [Rebane's Discord Colored Text Generator](https://rebane2001.com/
 
 <img src="docs/screenshots/studio.png" alt="The editor with an announcement template and the Effects panel">
 
-**Every Discord theme.** Classic colors follow the reader's theme, custom colors look the same everywhere.
+**Every Discord theme.** Classic and bright colors follow the reader's theme, custom colors look the same everywhere.
 
 <img src="docs/screenshots/themes.png" alt="The same console log message in the Light, Ash, Dark and Onyx themes">
 
@@ -90,6 +90,8 @@ A colored message is a code block with the language set to `ansi`. Inside it, th
 | `ESC[1m`, `ESC[3m`, `ESC[4m`, `ESC[9m` | Bold, italic, underline, strikethrough |
 | `ESC[30m` to `ESC[37m` | Classic text colors: black, red, green, yellow, blue, magenta, cyan, white |
 | `ESC[40m` to `ESC[47m` | Classic backgrounds, same order |
+| `ESC[90m` to `ESC[97m` | Bright text colors, same order |
+| `ESC[100m` to `ESC[107m` | Bright backgrounds, same order |
 | `ESC[38;2;R;G;Bm` | Any text color |
 | `ESC[48;2;R;G;Bm` | Any background color |
 
@@ -99,7 +101,7 @@ Chromacord writes the shortest sequence it can: it only adds what changed betwee
 
 A few things worth knowing:
 
-- Colors show on Discord desktop and in the browser. Mobile support has historically lagged behind, and 24-bit colors only rolled out widely in October 2026, so older apps may show plain text or only the classic eight.
+- Colors show on Discord desktop and in the browser. Mobile support has historically lagged behind, and 24-bit and bright colors come from the renderer that only rolled out widely in October 2026, so older apps may show plain text or only the classic eight.
 - Color codes count toward the message limit. An effect that colors every letter adds about 19 characters per letter.
 - Three backticks inside your text would close the code block early, so Chromacord breaks them up with a zero width space.
 

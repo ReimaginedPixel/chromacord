@@ -22,7 +22,7 @@ export function plainText(input) {
  * Styled runs for the text.
  * @param {string} text
  * @param {object} paint
- * @param {number|string|null} [paint.color] classic text code 30-37 or "#rrggbb"
+ * @param {number|string|null} [paint.color] theme text code (30-37 classic, 90-97 bright) or "#rrggbb"
  * @param {string|null} [paint.preset]       id from PRESETS, used instead of color
  * @param {string} [paint.effect]            id from EFFECTS, for presets
  * @param {'fg'|'bg'} [paint.target]         color the text or the background

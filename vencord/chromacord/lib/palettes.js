@@ -1,6 +1,6 @@
 // Copied from assets/js/data/palettes.js by scripts/build.mjs. Edit the original, then run npm run build.
 
-// Color data: the 8 classic ANSI slots, color palettes and effect presets.
+// Color data: the 8 classic and 8 bright ANSI slots, color palettes and effect presets.
 
 /** Classic slots. Text code is `code`, background code is `code + 10`. */
 export const CLASSIC = [
@@ -12,6 +12,18 @@ export const CLASSIC = [
   { code: 35, name: 'Pink' },
   { code: 36, name: 'Teal' },
   { code: 37, name: 'Gray' },
+];
+
+/** Bright slots, coded like the classic ones. Discord draws them in their own theme colors. */
+export const BRIGHT = [
+  { code: 90, name: 'Dark gray' },
+  { code: 91, name: 'Bright red' },
+  { code: 92, name: 'Bright green' },
+  { code: 93, name: 'Bright gold' },
+  { code: 94, name: 'Bright blue' },
+  { code: 95, name: 'Bright pink' },
+  { code: 96, name: 'Bright teal' },
+  { code: 97, name: 'White' },
 ];
 
 export const PALETTES = [
@@ -87,12 +99,33 @@ export const PRESETS = [
   { id: 'lesbian', name: 'Lesbian', flag: true, colors: ['#d52d00', '#ff9a56', '#ffffff', '#d362a4', '#a30262'] },
 ];
 
-/** Classic colors per Discord theme, as hex, for HTML copies and docs. */
+/**
+ * Theme colors per Discord theme, as hex, for HTML copies and docs. Keys are
+ * text codes: 30-37 classic, 90-97 bright. Light, Ash, Dark and Onyx are the
+ * classes .theme-light, .theme-dark, .theme-darker and .theme-midnight in
+ * Discord's CSS, and the bright values are its --ansi-bright-* variables.
+ */
 export const THEME_HEX = {
-  light: { 30: '#000000', 31: '#e75858', 32: '#399b5d', 33: '#c07600', 34: '#3789ea', 35: '#e444bb', 36: '#0098a3', 37: '#b6b7bc', text: '#36373e', base: '#fbfbfb' },
-  ash: { 30: '#000000', 31: '#ec6361', 32: '#45a366', 33: '#ce8100', 34: '#4591ec', 35: '#f549c9', 36: '#049faa', 37: '#b6b7bc', text: '#ffffff', base: '#323339' },
-  dark: { 30: '#000000', 31: '#de464a', 32: '#1b8d4d', 33: '#b36c00', 34: '#1a7ce6', 35: '#d53fae', 36: '#008995', 37: '#b6b7bc', text: '#e4e4e6', base: '#1a1a1e' },
-  onyx: { 30: '#000000', 31: '#d22d39', 32: '#008043', 33: '#a56100', 34: '#006dd4', 35: '#bc3699', 36: '#007c87', 37: '#b6b7bc', text: '#d1d1d5', base: '#070709' },
+  light: {
+    30: '#000000', 31: '#e75858', 32: '#399b5d', 33: '#c07600', 34: '#3789ea', 35: '#e444bb', 36: '#0098a3', 37: '#b6b7bc',
+    90: '#70717a', 91: '#ca2b37', 92: '#108e4d', 93: '#db6e00', 94: '#5865f2', 95: '#b3269c', 96: '#007782', 97: '#ffffff',
+    text: '#36373e', base: '#fbfbfb',
+  },
+  ash: {
+    30: '#000000', 31: '#ec6361', 32: '#45a366', 33: '#ce8100', 34: '#4591ec', 35: '#f549c9', 36: '#049faa', 37: '#b6b7bc',
+    90: '#70717a', 91: '#ff938e', 92: '#21bb63', 93: '#e79418', 94: '#a0a9fa', 95: '#fd99e9', 96: '#5fbfc8', 97: '#ffffff',
+    text: '#ffffff', base: '#323339',
+  },
+  dark: {
+    30: '#000000', 31: '#de464a', 32: '#1b8d4d', 33: '#b36c00', 34: '#1a7ce6', 35: '#d53fae', 36: '#008995', 37: '#b6b7bc',
+    90: '#70717a', 91: '#f47470', 92: '#21bb63', 93: '#e79418', 94: '#5865f2', 95: '#ff4cd2', 96: '#2fa9b3', 97: '#ffffff',
+    text: '#e4e4e6', base: '#1a1a1e',
+  },
+  onyx: {
+    30: '#000000', 31: '#d22d39', 32: '#008043', 33: '#a56100', 34: '#006dd4', 35: '#bc3699', 36: '#007c87', 37: '#b6b7bc',
+    90: '#70717a', 91: '#e55455', 92: '#108e4d', 93: '#db6e00', 94: '#5865f2', 95: '#ff4cd2', 96: '#0096a1', 97: '#ffffff',
+    text: '#d1d1d5', base: '#070709',
+  },
 };
 
 export const THEMES = [
